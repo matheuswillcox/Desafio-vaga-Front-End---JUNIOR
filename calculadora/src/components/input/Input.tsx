@@ -11,7 +11,13 @@ function Input(props: InputPropsTypes) {
   return (
     <StyledInput>
       <label htmlFor={label}>{label + checkRequired}</label>
-      <input type={type} id={label} value={value} onChange={handleChange} />
+      <input
+        className="box"
+        type={type}
+        id={label}
+        value={value}
+        onChange={handleChange}
+      />
       <div className="description">{description}</div>
     </StyledInput>
   );

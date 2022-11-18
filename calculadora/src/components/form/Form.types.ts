@@ -11,7 +11,6 @@ export type StateTypes = {
 };
 
 export type ResultTypes = {
-    amount: string ;
-    date: string
-  };
-  
+  amount: string;
+  date: string;
+};

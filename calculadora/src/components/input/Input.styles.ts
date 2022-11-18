@@ -6,22 +6,26 @@ const StyledInput = styled.div`
   gap: 5px;
   width: 100%;
   margin: 5px;
-  
+
   label {
-    color: var(--font) ;
+    color: var(--font);
   }
 
   input {
     border: 1px solid var(--border);
     padding: 10px;
     border-radius: 3px;
-    :focus{
-        border: 1px solid var(--primary)
+    :focus {
+      border: 1px solid var(--primary);
     }
+  }
+  .box {
+    width: 220px;
   }
 
   .description {
-    color: var(--font);
+    color: lightgrey;
+    font-size: 12px;
   }
 `;
 

@@ -1,6 +1,8 @@
 import StyledForm from "./Form.styles";
 import Input from "../input/Input";
 import { useReducer, useEffect, useState } from "react";
+import CurrencyInput from "../currencyInput/CurrencyInput";
+import { toBRL } from "../../helpers/currency";
 import {
   StateTypes,
   ActionTypes,
@@ -10,7 +12,7 @@ import {
 import { installmentsAnticipationService as iaService } from "../../services/installmentsAnticipation/installmentsAnticipation";
 
 const initialState = {
-  amount: "0",
+  amount: "R$ 0,00",
   installments: "0",
   mdr: "0",
 };
@@ -46,26 +48,28 @@ function Form() {
       setResults(mappedResult as []);
     });
   };
-  const renderResult = (payload: ResultTypes) => {
-    const { date, amount } = payload;
-    if (date === "1") {
-      return (
+  const renderResult = (payload: ResultTypes[]) => {
+    return (
+      <>
         <div>
-          Amanhã: <span>{amount}</span>
+          {" "}
+          Amanhã:{" "}
+          <span className="value">{toBRL(+payload[0]?.amount ?? 0, true)}</span>
         </div>
-      );
-    }
-    return <div>{`Em ${date} dias: ${amount}`}</div>;
+        <div>{`Em 15 dias: ${toBRL(+payload[1]?.amount ?? 0, true)}`}</div>
+        <div>{`Em 30 dias: ${toBRL(+payload[2]?.amount ?? 0, true)}`}</div>
+        <div>{`Em 90 dias: ${toBRL(+payload[3]?.amount ?? 0, true)}`}</div>
+      </>
+    );
   };
 
   useEffect(() => {
-    if (state.mdr && state.installments && Number(state.amount) > 1000) {
+    if (state.mdr && state.installments && Number(state.amount) >= 1000) {
       const mappedState = {
         mdr: Number(state.mdr),
         installments: Number(state.installments),
         amount: Number(state.amount),
       };
-      console.log(mappedState);
 
       fetchAnticipation(mappedState);
     }
@@ -75,12 +79,11 @@ function Form() {
     <StyledForm>
       <form>
         <h2 className="form-title">Simule sua Antecipação</h2>
-        <Input
+        <CurrencyInput
           label="Informe o valor da venda"
           value={state.amount.toString()}
           onChange={(e: string) => handleChange(e, "amount")}
           description=""
-          type="number"
         />
         <Input
           label="Em quantas parcelas"
@@ -98,8 +101,11 @@ function Form() {
         />
       </form>
       <div className="results">
-        <h2 className="results-title">VOCÊ RECEBERÁ</h2>
-        <div className="results-days">{results?.map(item => renderResult(item))}</div>
+        <div>
+          <h2 className="results-title">VOCÊ RECEBERÁ:</h2>
+          <div className="underline">___________________________</div>
+        </div>
+        <div className="results-days">{renderResult(results)}</div>
       </div>
     </StyledForm>
   );
